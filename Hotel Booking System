@@ -1,0 +1,199 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <conio.h>
+#include <stdlib.h>
+using namespace std;
+
+void print_interface() 
+{   
+    cout <<"\n" <<endl;
+    cout << "-------------------------------------" << endl;
+    cout << "\t    HOTEL PLAZA\t\t\t\t" << endl;
+    cout << "-------------------------------------" << endl;
+    cout << "Press 1 to Add Customer Details" << endl;
+    cout << "Press 2 to Display Customers" << endl;
+    cout << "Press 3 to Remove a Customer" << endl;
+    cout << "Press 4 to Print a Bill" << endl;
+    cout << "Press 5 to Exit" << endl;
+    cout << "-------------------------------------" << endl;
+}
+
+
+class Hotel
+{
+public:
+    class Customer
+    {
+    public:
+        string name;
+        string address;
+        string arrival_date;
+        string depart_date;
+        int room_number;
+        int rent;
+        Customer(string name, string address, string arrival_date, string depart_date, int room_number, int rent)
+        {
+            this->name = name;
+            this->address = address;
+            this->arrival_date = arrival_date;
+            this->depart_date = depart_date;
+            this->room_number = room_number;
+            this->rent = rent;
+        }
+    };
+
+public:
+    int capacity;
+    int booked = 0;
+    vector<Customer> customers;
+    vector<int> empty_rooms;
+
+public:
+    Hotel(int size)
+    {
+        this->capacity = size;
+    }
+
+    void display_customers()
+    {
+        cout << endl<<endl;
+        cout << "\t\t\t\t        Customers List"<<endl;
+        cout << "-----------------------------------------------------------------------------------------------------------" << endl;
+        cout << "Room No." << "\t" << "Name" << "\t\t\t" << "Address" << "\t\t\t" << "Arrival Date" << "\t\t" << "Departure Date" << endl;
+        cout << "-----------------------------------------------------------------------------------------------------------" << endl;
+        for (int i = 0; i < customers.size(); i++)
+        {
+            cout << customers[i].room_number << setw(19) << customers[i].name << setw(30) << customers[i].address << setw(25) << customers[i].arrival_date << setw(24) << customers[i].depart_date << left << endl;
+        }
+    }
+
+    void add_customer()
+    {
+        string name;
+        string address;
+        string arrival_date;
+        string depart_date;
+        int room_number;
+        int rent;
+        cout << endl;
+        cout << "-------------------------------------"<<endl;
+        cout << "\t   CUSTOMER DETAILS"<<endl;
+        cout << "-------------------------------------"<<endl;
+        cout << endl;
+        cout << "Enter Name          : ";
+        cin >> name;
+        cout << "Enter Address       : ";
+        cin>> address;
+        cout << "Enter Arrival Date  : ";
+        cin >> arrival_date;
+        cout << "Enter Depart Date   : ";
+        cin >> depart_date;
+        if(empty_rooms.empty()){
+            room_number = booked + 1;
+        }
+        else {
+            room_number = empty_rooms[0];
+            empty_rooms.erase(empty_rooms.begin());
+        }
+        rent = 800;
+        Customer x = Customer(name, address, arrival_date, depart_date, room_number, rent);
+        customers.push_back(x);
+        booked++;
+    };
+
+    void remove_customer()
+    {
+        int room_number;
+        cout << endl <<endl;
+        cout <<"------------------------------------"<<endl;
+        cout << "\tRemove Customer Details"<<endl;
+        cout <<"------------------------------------"<<endl<<endl;
+        cout << "Enter Room No. : ";
+        cin >> room_number;
+        for (int i = 0; i < customers.size(); i++)
+        {
+            if(customers[i].room_number == room_number) {
+                customers.erase(customers.begin() + i);
+            }
+        }
+        booked--;
+        empty_rooms.push_back(room_number);
+    }
+
+    void print_bill()
+    {
+        int room_number;
+        cout << endl<<endl;
+        cout << "-----------------------------------"<<endl;
+        cout << "\tPrint Customer Bill"<<endl;
+        cout << "-----------------------------------"<<endl<<endl;
+        cout << "   Enter Room Number : ";
+        cin >> room_number;
+        string bill_name;
+        int bill_rent;
+        for(int i = 0; i < customers.size(); i++) {
+            if(customers[i].room_number == room_number) {
+                bill_name = customers[i].name;
+                bill_rent = customers[i].rent;
+            }
+        }
+        cout <<endl<<endl;
+        cout << "-----------------------------------"<<endl;
+        cout << "\t    Hotel Plaza"<<endl;
+        cout << "-----------------------------------"<<endl;
+        cout << "\t   Customer Bill"<<endl;
+        cout << " Address : Mandavkar Nagar, Pune"<<endl;
+        cout << " Contact Number : 07256 240-444"<<endl;
+        cout << "-----------------------------------" << endl;
+        cout <<"              Date : "<<endl;
+        cout <<"              Arrival Date : "<<endl;
+        cout <<"              Depart  Date : "<<endl;
+        cout << "Room Number   : " <<room_number <<endl;
+        cout << "Customer Name : " << bill_name << endl;
+        cout << "-----------------------------------" << endl;
+        cout << "Total Bill Amount         Rs " << bill_rent << endl; 
+        cout << "\n\n               Customer Signature"<<endl;
+        cout << "-----------------------------------" << endl ;
+    }
+};
+
+
+
+int main() { 
+    int input;
+    system("cls");
+    Hotel H = Hotel(100);
+    print_interface();
+    while(true) 
+    {
+        cout << endl;
+        cout << "Option : ";
+        cin >> input;
+        switch (input)
+        {
+        case 1:
+            H.add_customer();
+            cout << "Customer Added!" << endl;
+            break;
+        case 2:
+            H.display_customers();
+            break;
+        case 3:
+            H.remove_customer();
+            cout << "Customer Removed!" << endl;
+            break;
+        case 4:
+            H.print_bill();
+            break;
+        case 5:
+            return 0;
+            break;
+        default:
+            cout << "Invalid Option" << endl;
+            break;
+        }
+    }
+    getch();
+    return 0;
+}
